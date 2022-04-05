@@ -1,5 +1,5 @@
 <script>
-const { connect, createLocalVideoTrack } = require('twilio-video');
+const { connect, } = require('twilio-video');
 import axios from "axios";
 export default {
     name: "Home",
