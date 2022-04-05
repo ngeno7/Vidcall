@@ -29,7 +29,7 @@ export default {
               audio: true,
               video: { width: 640 }
             }).then(localTracks => {
-              return connect('$TOKEN', {
+              return connect(token, {
                 name: this.$route.query.room,
                 tracks: localTracks
               });
@@ -37,7 +37,7 @@ export default {
               console.log(`Connected to Room: ${room.name}`);
             });
 
-            connect(`${token}`, { name: this.$route.query.room }).then(room => {
+            connect(token, { name: this.$route.query.room }).then(room => {
               console.log(`Successfully joined a Room: ${room}`);
               console.log(`The LocalParticipant identity is ${room.localParticipant}`)
               room.on('participantConnected', participant => {
