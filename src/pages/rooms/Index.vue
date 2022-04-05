@@ -1,5 +1,5 @@
 <script>
-const { connect, createLocalTracks } = require('twilio-video');
+const { connect, createLocalTracks, createLocalVideoTrack } = require('twilio-video');
 import axios from "axios";
 export default {
     name: "Home",
@@ -34,12 +34,13 @@ export default {
                 tracks: localTracks
               });
             }).then(room => {
-              console.log(`Connected to Room: ${room.name}`);
-            });
-
-            connect(token, { name: this.$route.query.room }).then(room => {
               console.log(`Successfully joined a Room: ${room}`);
-              console.log(`The LocalParticipant identity is ${room.localParticipant}`)
+              console.log(`The LocalParticipant identity is ${room.localParticipant}`);
+              createLocalVideoTrack().then(localVideoTrack => {
+                  const video = localVideoTrack.attach();
+                  video.style.transform = 'scale(-1, 1)';
+                  document.getElementById('local-media').appendChild(video);
+              });
               room.on('participantConnected', participant => {
 
                 console.log(`A remote Participant connected: ${participant}`);
