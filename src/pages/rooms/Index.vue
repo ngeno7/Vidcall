@@ -70,11 +70,6 @@ export default {
                     }
                   });
                 });
-                participant.on('trackSubscribed', track => {
-                    let tr = track.attach();
-                    tr.style.transform = 'scale(-1, 1)';
-                  document.getElementById('remote-media').appendChild(tr);
-                });
               });
             }, error => {
               console.error(`Unable to connect to Room: ${error.message}`);
