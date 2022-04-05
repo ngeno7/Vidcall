@@ -26,7 +26,7 @@ export default {
 
         joinRoom(token) {
             createLocalTracks({
-              audio: true,
+              audio: { noiseSuppression: true, echoCancellation: true },
               video: { width: 640 }
             }).then(localTracks => {
               return connect(token, {
@@ -39,6 +39,7 @@ export default {
               createLocalVideoTrack().then(localVideoTrack => {
                   const video = localVideoTrack.attach();
                   video.style.transform = 'scale(-1, 1)';
+                  video.style.maxHeight = '35rem;';
                   document.getElementById('local-media').appendChild(video);
               });
               room.on('participantConnected', participant => {
@@ -49,6 +50,7 @@ export default {
                     if (publication.track) {
                       let vid = publication.track.attach();
                       vid.style.transform = 'scale(-1, 1)';
+                      vid.style.maxHeight = '35rem;';
                       document.getElementById('remote-media').appendChild(vid);
                     }
                   });
@@ -56,6 +58,7 @@ export default {
                 participant.on('trackSubscribed', track => {
                     let tr = track.attach();
                     tr.style.transform = 'scale(-1, 1)';
+                    tr.style.maxHeight = '35rem;';
                   document.getElementById('remote-media').appendChild(tr);
                 });
               });
@@ -66,6 +69,7 @@ export default {
                     if (publication.track) {
                       let vid = publication.track.attach();
                       vid.style.transform = 'scale(-1, 1)';
+                      vid.style.maxHeight = '35rem;';
                       document.getElementById('remote-media').appendChild(vid);
                     }
                   });
@@ -117,5 +121,8 @@ export default {
     .h-75-screen {
         height: 80vh;
     }
+}
+.h-75-screen {
+    height: 100%;
 }
 </style>
