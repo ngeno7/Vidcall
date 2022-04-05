@@ -29,7 +29,7 @@ export default {
             connect(`${token}`, { name: this.$route.query.room }).then(room => {
               console.log(`Successfully joined a Room: ${room}`);
               console.log(`The LocalParticipant identity is ${room.localParticipant}`)
-              createLocalVideoTrack({ name: `Hillary`}).then((localVideoTrack ) => {
+              room.localParticipant.then((localVideoTrack ) => {
                   console.log('Created LocalVideoTrack with id ${localVideoTrack.id}')
                     const localMediaContainer = document.getElementById('local-media');
                     const video = localVideoTrack.attach();
