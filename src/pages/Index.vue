@@ -72,9 +72,17 @@ export default {
             id="grid-customer" class="bg-white p-2 text-sm w-full rounded">
         </div>
         <div class="w-full p-2 mb-1">
-          <label for="grid-enquiry" 
+          <label for="grid-enquiry-select" 
             class="text-gray-700 text-base font-medium mb-4">Enquiry</label>
-          <input type="text" v-model.trim="meet.enquiry" required
+          <select type="text" v-model.trim="meet.enquiry"
+            id="grid-enquiry-select" class="bg-white p-2 text-sm w-full rounded">
+            <option value=""></option>
+            <option value="">Enquire One</option>
+            <option value="">Enquire Two</option>
+          </select>
+        </div>
+        <div class="w-full p-2 mb-1">
+          <input type="text" v-model.trim="meet.enquiry"
             id="grid-enquiry" class="bg-white p-2 text-sm w-full rounded">
         </div>
         <div class="w-full text-center p-2">
