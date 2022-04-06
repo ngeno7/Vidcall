@@ -92,7 +92,16 @@ export default {
         </div>
     </div>
     <div class="md:w-1/2 w-full" id="local-media"></div>
-    <div class="md:w-1/2 w-full" id="remote-media"></div>
+    <div class="md:w-1/2 w-full flex flex-col content-start" id="remote-media">
+      <div class="w-1/2">
+        <img class="h-32" src="/cfcss.png" alt="">
+      </div>
+      <div class="flex-1 mt-6">
+        <p class="text-gray-800 font-thin">
+          Our CFCS consultation services is here to help you write your plan ,educate and approve in Minnesota
+        </p>
+      </div>
+    </div>
 </div>
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-gray-400 p-2">
@@ -108,7 +117,7 @@ export default {
     </div>
     <div class="flex-1 flex justify-center">
         <router-link
-        :to="{ name: `home`}"
+        :to="{ name: `rate-call`}"
         >
         <img class="h-10 w-10" src="/actions/cancel.png" alt="">
         </router-link>
@@ -117,12 +126,12 @@ export default {
 </div>
 </template>
 <style scoped>
-@media only screen and (min-width: 656px) {
+@media (min-width: 656px) {
     .h-75-screen {
         height: 80vh;
     }
 }
 .h-75-screen {
-    height: 100%;
+    height: 90vh;
 }
 </style>
