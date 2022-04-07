@@ -1,5 +1,5 @@
 <script>
-const { connect, createLocalTracks, createLocalVideoTrack } = require('twilio-video');
+const { connect, createLocalTracks } = require('twilio-video');
 import axios from "axios";
 export default {
     name: "Home",
@@ -25,25 +25,22 @@ export default {
         },
 
         joinRoom(token) {
-            createLocalTracks({
-              audio: { noiseSuppression: true, echoCancellation: true },
-              video: { width: 640 }
-            }).then(localTracks => {
-              return connect(token, {
+
+            connect(token, {
                 name: this.$route.query.room,
-                tracks: localTracks
-              });
-            }).then(room => {
+                video: { width: 640 }
+              }).then(room => {
               console.log(`Successfully joined a Room: ${room}`);
               console.log(`The LocalParticipant identity is ${room.localParticipant}`);
-              createLocalVideoTrack().then(localVideoTrack => {
-                  const video = localVideoTrack.attach();
-                  video.style.transform = 'scale(-1, 1)';
-                  video.style.maxHeight = '35rem;';
-                  document.getElementById('local-media').appendChild(video);
+              createLocalTracks().then(localTracks => {
+                var localMediaContainer = document.getElementById('local-media');
+                localTracks.forEach(function(track) {
+                  room.localParticipant.publishTrack(track);
+                  localMediaContainer.appendChild(track.attach());
+                });
+                
               });
               room.on('participantConnected', participant => {
-
                 console.log(`A remote Participant connected: ${participant}`);
                 room.participants.forEach(participant => {
                   participant.tracks.forEach(publication => {
@@ -59,11 +56,11 @@ export default {
                     let tr = track.attach();
                     tr.style.transform = 'scale(-1, 1)';
                     tr.style.maxHeight = '35rem;';
-                  document.getElementById('remote-media').appendChild(tr);
+                    document.getElementById('remote-media').appendChild(tr);
                 });
               });
               room.once('participantConnected', participant => {
-                console.log(`A remote Participant connected: ${participant}`);
+                console.log(`A remote Participant connected once: ${participant}`);
                 room.participants.forEach(participant => {
                   participant.tracks.forEach(publication => {
                     if (publication.track) {
