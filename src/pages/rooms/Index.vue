@@ -77,8 +77,10 @@ export default {
         handleParticipantsConnected(participant) {
           console.log(`A remote Participant connected: ${participant.identity}`);
           participant.tracks.forEach(publication => {
+            console.log(publication.track);
             if (publication.track) {
-              let remoteDiv = document.getElementById(participant.identity)
+              if(publication.track.kind == 'video') {
+                let remoteDiv = document.getElementById(participant.identity)
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('md:w-1/3');
@@ -88,9 +90,11 @@ export default {
 
               remoteDiv.replaceChildren(publication.track.attach(), remoteDiv.children);
               document.getElementById('video-container').appendChild(remoteDiv);
-            } else {
-              document.getElementById('video-container').appendChild(publication.track.attach());
-            }
+              } else {
+
+                document.getElementById('video-container').appendChild(publication.track.attach());
+              }
+            } 
           });
           participant.on('trackSubscribed', track => {
            console.log(track.kind)
