@@ -42,7 +42,9 @@ export default {
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
 
-                    localDiv.appendChild(localVideoTrack.attach());
+                    
+
+                    localDiv.replaceChildren(localVideoTrack.attach(), ...localDiv.children);
                     document.getElementById('video-container').appendChild(localDiv);
 
                     return room.localParticipant.publishTrack(localVideoTrack);
@@ -84,7 +86,7 @@ export default {
                 remoteDiv.setAttribute('id', participant.identity);
               }
 
-              remoteDiv.appendChild(publication.track.attach());
+              remoteDiv.replaceChildren(publication.track.attach(), remoteDiv.children);
               document.getElementById('video-container').appendChild(remoteDiv);
             }
           });
@@ -99,7 +101,7 @@ export default {
                 remoteDiv.setAttribute('id', participant.identity);
               }
 
-              remoteDiv.appendChild(track.attach());
+              remoteDiv.replaceChildren(track.attach(), remoteDiv.children);
               document.getElementById('video-container').appendChild(remoteDiv);
             }
           });
