@@ -2,14 +2,33 @@
 export default {
     name: "CallCenter",
 
+    data() {
+
+        return {
+            rooms: [],
+        };
+    },
+
+    mounted() {
+        this.fetchCallCenterRooms();
+    },
+
     methods: {
 
-        joinRoom() {
-            let url = `/room?room=1649242238679-1649242244&name=1649242238679&enquiry=What+is+CFCS`;
+        joinRoom(room) {
+            window.confirm(`Confirm Join Client Meeting?`);
 
-            window.open(url, 'ROOM')
+            let agent = new Date().getTime();
+            window.open(`/room?room=${room}&id=${agent}`);
         },
-    }
+
+        fetchCallCenterRooms() {
+
+            this.$http.get('rooms').then(({ data }) => {
+                this.rooms = data;
+            }).catch(() => {});
+        },
+    },
 }
 </script>
 <template>
@@ -28,18 +47,17 @@ export default {
             </tr>
         </thead>
         <tbody class="bg-gray-100 text-xs">
-            <tr>
-                <td class="p-1">Customer One</td>
-                <td class="p-1">CFCS Enquiry</td>
-                <td class="p-1">12-04-2034 - 13:00</td>
-                <td class="p-1">Pending</td>
+            <tr v-for="room in rooms" :key="room.id">
+                <td class="p-1">{{ room.client_name }}</td>
+                <td class="p-1">{{ room.customer_issue }}</td>
+                <td class="p-1">{{ room.call_time }}</td>
+                <td class="p-1">{{ room.status }}</td>
                 <td class="p-1">
-                    <button 
-                        @click.prevent="joinRoom"
+                    <button
+                        @click.prevent="joinRoom(room.slug)"
                         class="bg-blue-500 font-medium text-white py-1 px-3">
-                        Receive Call
+                        Join Client Call
                     </button>
-                    
                 </td>
             </tr>
         </tbody>

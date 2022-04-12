@@ -1,6 +1,5 @@
 <script>
-const { connect, createLocalTracks } = require('twilio-video');
-import axios from "axios";
+const { connect, createLocalVideoTrack  } = require('twilio-video');
 export default {
     name: "Home",
 
@@ -8,97 +7,95 @@ export default {
 
         return {
             accessToken: ``,
-        }
+            participants: [],
+            room: {},
+        };
     },
 
     mounted() {
-        this.fetchAccessToken()
+        this.fetchAccessToken();
     },
 
     methods: {
 
-        fetchAccessToken() {
+        async fetchAccessToken() {
 
-            axios.get(`https://video.racecoursehospital.com/src/token/index.php?room=${this.$route.query.room}`).then(({ data }) => {
-                this.joinRoom(data)
-            });
+            const accessToken = await this.$http.get(`rooms/access-token?room=${this.$route.query.room}&id=${this.$route.query.id}`);
+
+            this.accessToken = accessToken.data;
+            this.joinRoom(accessToken.data);
         },
 
         joinRoom(token) {
 
             connect(token, {
                 name: this.$route.query.room,
-                video: { width: 640 }
+                video: { width: 300, height: 300 },
+                audio: true,
               }).then(room => {
-              console.log(`Successfully joined a Room: ${room}`);
-              console.log(`The LocalParticipant identity is ${room.localParticipant}`);
-              createLocalTracks().then(localTracks => {
-                var localMediaContainer = document.getElementById('local-media');
-                localTracks.forEach(function(track) {
-                  room.localParticipant.publishTrack(track);
-                  localMediaContainer.appendChild(track.attach());
+                createLocalVideoTrack().then(localVideoTrack => {
+                  room.localParticipant.publishTrack(localVideoTrack);
                 });
-                
-              });
-              room.on('participantConnected', participant => {
-                console.log(`A remote Participant connected: ${participant}`);
+
                 room.participants.forEach(participant => {
-                  participant.tracks.forEach(publication => {
-                    if (publication.track) {
-                      let vid = publication.track.attach();
-                      vid.style.transform = 'scale(-1, 1)';
-                      vid.style.maxHeight = '35rem;';
-                      document.getElementById('remote-media').appendChild(vid);
-                    }
-                  });
+                  console.log(participant);
+                  this.handleParticipantsConnected(participant);
                 });
-                participant.on('trackSubscribed', track => {
-                    let tr = track.attach();
-                    tr.style.transform = 'scale(-1, 1)';
-                    tr.style.maxHeight = '35rem;';
-                    document.getElementById('remote-media').appendChild(tr);
+
+                console.log(`Successfully joined a Room: ${room}`);
+                console.log(`The LocalParticipant identity is ${room.localParticipant}`);
+                room.on('participantConnected', participant => {
+                  this.handleParticipantsConnected(participant);
                 });
-              });
-              room.once('participantConnected', participant => {
-                console.log(`A remote Participant connected once: ${participant}`);
-                room.participants.forEach(participant => {
-                  participant.tracks.forEach(publication => {
-                    if (publication.track) {
-                      let vid = publication.track.attach();
-                      vid.style.transform = 'scale(-1, 1)';
-                      vid.style.maxHeight = '35rem;';
-                      document.getElementById('remote-media').appendChild(vid);
-                    }
-                  });
+                room.once('participantConnected', participant => {
+                  this.handleParticipantsConnected(participant);
                 });
-              });
+                room.once('participantDisconnected', participant => {
+                  this.handleParticipantDisconnected(participant);
+                });
+                room.once('participantDisconnected', participant => {
+                  this.handleParticipantDisconnected(participant);
+                });
             }, error => {
               console.error(`Unable to connect to Room: ${error.message}`);
             });
+        },
+
+        handleParticipantsConnected(participant) {
+          console.log(`A remote Participant connected: ${participant.identity}`);
+          participant.tracks.forEach(publication => {
+            if (publication.track) {
+              const remoteDiv = document.createElement('div');
+              remoteDiv.classList.add('md:w-1/3');
+              remoteDiv.classList.add('w-full');
+              remoteDiv.setAttribute('id', participant.identity);
+              remoteDiv.appendChild(publication.track.attach());
+              document.getElementById('video-container').appendChild(remoteDiv);
+            }
+          });
+          participant.on('trackSubscribed', track => {
+           console.log(track.kind)
+             const remoteDiv = document.createElement('div');
+              remoteDiv.classList.add('md:w-1/3');
+              remoteDiv.classList.add('w-full');
+              remoteDiv.setAttribute('id', participant.identity);
+              remoteDiv.appendChild(track.attach());
+              if(track.kind == 'video') {
+                document.getElementById('video-container').appendChild(remoteDiv);
+              }
+              
+          });
+        },
+
+        handleParticipantDisconnected(participant) {
+          console.log(`Participant "${participant.identity}" has disconnected to the Room`);
         },
     },
 }
 </script>
 <template>
 <div class="w-full flex flex-wrap h-75-screen overflow-auto p-2" id="vid-stream">
-    <div class="w-full flex flex-wrap justify-center p-2">
-        <div class="md:w-1/3 w-full bg-gray-200 w-full p-2 select-all h-10">
-            <p>
-                {{ $route.query.room }}
-            </p>
-        </div>
-    </div>
-    <div class="md:w-1/2 w-full" id="local-media"></div>
-    <div class="md:w-1/2 w-full flex flex-col content-start" id="remote-media">
-      <div class="w-1/2">
-        <img class="h-32" src="/cfcss.png" alt="">
-      </div>
-      <div class="flex-1 mt-6">
-        <p class="text-gray-800 font-thin">
-          Our CFCS consultation services is here to help you write your plan ,educate and approve in Minnesota
-        </p>
-      </div>
-    </div>
+    <div class="w-full flex flex-wrap content-start" id="video-container"></div>
 </div>
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-gray-400 p-2">
