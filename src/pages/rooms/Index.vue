@@ -41,10 +41,10 @@ export default {
                       localDiv.classList.add('w-full');
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
-
-                    
-
-                    localDiv.replaceChildren(localVideoTrack.attach(), ...localDiv.children);
+                    localDiv.innerHTML = '';
+                    const video = localVideoTrack.attach();
+                      video.style.transform = 'scale(-1, 1)';
+                      localDiv.appendChild(video);
                     document.getElementById('video-container').appendChild(localDiv);
 
                     return room.localParticipant.publishTrack(localVideoTrack);
@@ -80,15 +80,16 @@ export default {
             console.log(publication.track);
             if (publication.track) {
               if(publication.track.kind == 'video') {
-                let remoteDiv = document.getElementById(participant.identity)
+                let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
+                remoteDiv.classList.add('p-1');
                 remoteDiv.setAttribute('id', participant.identity);
               }
-
-              remoteDiv.replaceChildren(publication.track.attach(), remoteDiv.children);
+              remoteDiv.innerHTML = '';
+              remoteDiv.appendChild(publication.track.attach());
               document.getElementById('video-container').appendChild(remoteDiv);
               } else {
 
@@ -104,10 +105,11 @@ export default {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
+                remoteDiv.classList.add('p-1');
                 remoteDiv.setAttribute('id', participant.identity);
               }
-
-              remoteDiv.replaceChildren(track.attach(), remoteDiv.children);
+              remoteDiv.innerHTML = '';
+              remoteDiv.appendChild(track.attach());
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
               document.getElementById('video-container').appendChild(track.attach());
