@@ -34,7 +34,14 @@ export default {
                 audio: true,
               }).then(room => {
                 createLocalVideoTrack().then(localVideoTrack => {
-                  room.localParticipant.publishTrack(localVideoTrack);
+                    const localDiv = document.createElement('div');
+                    localDiv.classList.add('md:w-1/3');
+                    localDiv.classList.add('w-full');
+                    localDiv.setAttribute('id', room.localParticipant.identity);
+                    localDiv.appendChild(localVideoTrack.attach());
+                    document.getElementById('video-container').appendChild(localDiv);
+
+                    return room.localParticipant.publishTrack(localVideoTrack);
                 });
 
                 room.participants.forEach(participant => {
@@ -65,25 +72,35 @@ export default {
           console.log(`A remote Participant connected: ${participant.identity}`);
           participant.tracks.forEach(publication => {
             if (publication.track) {
-              const remoteDiv = document.createElement('div');
-              remoteDiv.classList.add('md:w-1/3');
-              remoteDiv.classList.add('w-full');
-              remoteDiv.setAttribute('id', participant.identity);
+              let remoteDiv = document.getElementById(participant.identity)
+              if(remoteDiv) {
+                remoteDiv = document.getElementById(participant.identity);
+              } else {
+                remoteDiv = document.createElement('div');
+                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('w-full');
+                remoteDiv.setAttribute('id', participant.identity);
+              }
+              
               remoteDiv.appendChild(publication.track.attach());
               document.getElementById('video-container').appendChild(remoteDiv);
             }
           });
           participant.on('trackSubscribed', track => {
            console.log(track.kind)
-             const remoteDiv = document.createElement('div');
-              remoteDiv.classList.add('md:w-1/3');
-              remoteDiv.classList.add('w-full');
-              remoteDiv.setAttribute('id', participant.identity);
-              remoteDiv.appendChild(track.attach());
-              if(track.kind == 'video') {
-                document.getElementById('video-container').appendChild(remoteDiv);
+            if(track.kind == 'video') {
+             let remoteDiv = document.getElementById(participant.identity)
+              if(remoteDiv) {
+                remoteDiv = document.getElementById(participant.identity);
+              } else {
+                remoteDiv = document.createElement('div');
+                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('w-full');
+                remoteDiv.setAttribute('id', participant.identity);
               }
-              
+              remoteDiv.appendChild(track.attach());
+              document.getElementById('video-container').appendChild(remoteDiv);
+            }
           });
         },
 
