@@ -34,10 +34,14 @@ export default {
                 audio: true,
               }).then(room => {
                 createLocalVideoTrack().then(localVideoTrack => {
-                    const localDiv = document.createElement('div');
-                    localDiv.classList.add('md:w-1/3');
-                    localDiv.classList.add('w-full');
-                    localDiv.setAttribute('id', room.localParticipant.identity);
+                    let localDiv = document.getElementById(room.localParticipant.identity);
+                    if(!localDiv) {
+                      localDiv = document.createElement('div');
+                      localDiv.classList.add('md:w-1/3');
+                      localDiv.classList.add('w-full');
+                      localDiv.setAttribute('id', room.localParticipant.identity);
+                    }
+
                     localDiv.appendChild(localVideoTrack.attach());
                     document.getElementById('video-container').appendChild(localDiv);
 
@@ -73,15 +77,13 @@ export default {
           participant.tracks.forEach(publication => {
             if (publication.track) {
               let remoteDiv = document.getElementById(participant.identity)
-              if(remoteDiv) {
-                remoteDiv = document.getElementById(participant.identity);
-              } else {
+              if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
                 remoteDiv.setAttribute('id', participant.identity);
               }
-              
+
               remoteDiv.appendChild(publication.track.attach());
               document.getElementById('video-container').appendChild(remoteDiv);
             }
@@ -90,14 +92,13 @@ export default {
            console.log(track.kind)
             if(track.kind == 'video') {
              let remoteDiv = document.getElementById(participant.identity)
-              if(remoteDiv) {
-                remoteDiv = document.getElementById(participant.identity);
-              } else {
+              if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
                 remoteDiv.setAttribute('id', participant.identity);
               }
+
               remoteDiv.appendChild(track.attach());
               document.getElementById('video-container').appendChild(remoteDiv);
             }
