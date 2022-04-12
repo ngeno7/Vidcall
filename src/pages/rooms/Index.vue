@@ -89,7 +89,7 @@ export default {
               remoteDiv.replaceChildren(publication.track.attach(), remoteDiv.children);
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
-              document.getElementById('video-container').appendChild(track.attach());
+              document.getElementById('video-container').appendChild(publication.track.attach());
             }
           });
           participant.on('trackSubscribed', track => {
