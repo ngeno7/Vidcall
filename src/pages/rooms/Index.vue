@@ -7,13 +7,23 @@ export default {
 
         return {
             accessToken: ``,
-            participants: [],
-            room: {},
+            mute: false,
+            video: true,
+            route: window.location.origin,
+            inviteName: new Date().getTime(),
         };
+    },
+
+    computed: {
+      text() {
+        let url = encodeURIComponent(`${this.route}${this.$route.path}?room=${this.$route.query.room}&id=${this.inviteName}`)
+        return `CFCS Video Meeting ${url}`;
+      }
     },
 
     mounted() {
         this.fetchAccessToken();
+        console.log(this.$route, window.location);
     },
 
     methods: {
@@ -48,6 +58,31 @@ export default {
                     document.getElementById('video-container').appendChild(localDiv);
 
                     return room.localParticipant.publishTrack(localVideoTrack);
+                });
+                document.getElementById('mute-button').addEventListener('click', () => {
+                  console.log(`mute clicked`);
+                  this.mute = !this.mute;
+                  room.localParticipant.audioTracks.forEach(publication => {
+                    
+                    if(this.mute) {
+                      publication.track.disable();
+                    } else {
+                      publication.track.enable();
+                    }
+                  });
+                });
+
+                document.getElementById('enable-video').addEventListener('click', () => {
+                  console.log(`Video enable button`);
+                  this.video = !this.video;
+                  room.localParticipant.videoTracks.forEach(publication => {
+                    if(this.video) {
+                      publication.track.enable();
+                    } else {
+                      publication.track.disable();
+                    }
+                    
+                  });
                 });
 
                 room.participants.forEach(participant => {
@@ -130,21 +165,35 @@ export default {
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-gray-400 p-2">
     <div class="flex-1 flex justify-center">
-        <button>
-        <img class="h-10 w-10" src="/actions/mute.png" alt="">
+        <a
+        target="_blank"
+        :href='`https://api.whatsapp.com/send?text=${text}`'
+        >
+        <img class="h-10 w-10" src="/actions/share.png" alt="">
+        </a>
+    </div>
+    <div class="flex-1 flex justify-center">
+        <button
+          id="mute-button"
+          >
+          <img class="h-10 w-10" 
+            :src="mute ? `/actions/mic.png` : `/actions/mute.png`" alt="">
         </button>
     </div>
     <div class="flex-1 flex justify-center">
-        <button>
-        <img class="h-10 w-10" src="/actions/cancel-video.png" alt="">
+        <button
+          id="enable-video"
+        >
+        <img class="h-10 w-10" 
+          :src="video ? `/actions/cancel-video.png` : `/actions/video.png`" alt="">
         </button>
     </div>
     <div class="flex-1 flex justify-center">
-        <router-link
-        :to="{ name: `rate-call`}"
+        <a
+        href="/rate-call"
         >
         <img class="h-10 w-10" src="/actions/cancel.png" alt="">
-        </router-link>
+        </a>
     </div>
    </div> 
 </div>
