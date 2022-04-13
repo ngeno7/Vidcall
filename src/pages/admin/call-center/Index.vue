@@ -16,7 +16,7 @@ export default {
     methods: {
 
         joinRoom(room) {
-            window.confirm(`Confirm Join Client Meeting?`);
+            if(!window.confirm(`Confirm Join Client Meeting?`)) return;
 
             let agent = new Date().getTime();
             window.open(`/room?room=${room}&id=${agent}`);

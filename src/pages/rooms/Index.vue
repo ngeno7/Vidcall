@@ -48,20 +48,17 @@ export default {
                     if(!localDiv) {
                       localDiv = document.createElement('div');
                       localDiv.classList.add('w-full');
-                      localDiv.classList.add('md:w-1/3');
+                      localDiv.classList.add('md:h-96');
+                      localDiv.classList.add('h-auto');
                       localDiv.classList.add('border-4');
-                      localDiv.classList.add('md:h-80');
-                      localDiv.classList.add('h-80');
-                      localDiv.classList.add('flex');
-                      localDiv.classList.add('border-purple-500');
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
                     localDiv.innerHTML = '';
                     const video = localVideoTrack.attach();
                       video.style.transform = 'scale(-1, 1)';
                       video.style.display = 'flex';
-                      localDiv.appendChild(video);
-                    document.getElementById('video-container').appendChild(localDiv);
+                    localDiv.appendChild(video);
+                    document.getElementById('local-container').appendChild(localDiv);
 
                     return room.localParticipant.publishTrack(localVideoTrack);
                 });
@@ -125,7 +122,7 @@ export default {
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('w-full');
-                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('md:w-1/2');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('border-4');
                 remoteDiv.classList.add('md:h-80');
@@ -149,11 +146,11 @@ export default {
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
                 remoteDiv.classList.add('w-full');
-                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('md:w-1/2');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('border-4');
-                remoteDiv.classList.add('md:h-80');
-                remoteDiv.classList.add('h-80');
+                remoteDiv.classList.add('md:h-60');
+                remoteDiv.classList.add('h-50');
                 remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
@@ -161,6 +158,7 @@ export default {
               const video = track.attach();
               video.style.transform = 'scale(-1, 1)';
               video.style.display = 'flex';
+              video.style.height = '100%';
               remoteDiv.appendChild(video);
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
@@ -177,10 +175,14 @@ export default {
 </script>
 <template>
 <div class="w-full flex flex-wrap h-75-screen overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
-    <div class="w-full flex flex-wrap content-start" id="video-container"></div>
+    <div 
+      class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300 border-r-2" 
+      id="local-container"></div>
+    <div class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300" 
+      id="video-container"></div>
 </div>
 <div class="w-full flex justify-center">
-   <div class="md:w-1/3 w-11/12 flex flex-row bg-gray-400 p-2">
+   <div class="md:w-1/3 w-11/12 flex flex-row bg-blue-500 p-2">
     <div class="flex-1 flex justify-center">
         <a
         target="_blank"
