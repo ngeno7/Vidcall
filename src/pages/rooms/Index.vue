@@ -40,20 +40,26 @@ export default {
 
             connect(token, {
                 name: this.$route.query.room,
-                video: { width: 300, height: 300 },
+                video: true,
                 audio: true,
               }).then(room => {
                 createLocalVideoTrack().then(localVideoTrack => {
                     let localDiv = document.getElementById(room.localParticipant.identity);
                     if(!localDiv) {
                       localDiv = document.createElement('div');
-                      localDiv.classList.add('md:w-1/3');
                       localDiv.classList.add('w-full');
+                      localDiv.classList.add('md:w-1/3');
+                      localDiv.classList.add('border-4');
+                      localDiv.classList.add('md:h-80');
+                      localDiv.classList.add('h-80');
+                      localDiv.classList.add('flex');
+                      localDiv.classList.add('border-purple-500');
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
                     localDiv.innerHTML = '';
                     const video = localVideoTrack.attach();
                       video.style.transform = 'scale(-1, 1)';
+                      video.style.display = 'flex';
                       localDiv.appendChild(video);
                     document.getElementById('video-container').appendChild(localDiv);
 
@@ -118,9 +124,13 @@ export default {
                 let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
-                remoteDiv.classList.add('p-1');
+                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('border-4');
+                remoteDiv.classList.add('md:h-80');
+                remoteDiv.classList.add('h-80');
+                remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
               remoteDiv.innerHTML = '';
@@ -130,21 +140,28 @@ export default {
 
                 document.getElementById('video-container').appendChild(publication.track.attach());
               }
-            } 
+            }
           });
           participant.on('trackSubscribed', track => {
-           console.log(track.kind)
+           console.log(track)
             if(track.kind == 'video') {
              let remoteDiv = document.getElementById(participant.identity)
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('w-full');
-                remoteDiv.classList.add('p-1');
+                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('border-4');
+                remoteDiv.classList.add('md:h-80');
+                remoteDiv.classList.add('h-80');
+                remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
               remoteDiv.innerHTML = '';
-              remoteDiv.appendChild(track.attach());
+              const video = track.attach();
+              video.style.transform = 'scale(-1, 1)';
+              video.style.display = 'flex';
+              remoteDiv.appendChild(video);
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
               document.getElementById('video-container').appendChild(track.attach());
@@ -159,7 +176,7 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex flex-wrap h-75-screen overflow-auto p-2" id="vid-stream">
+<div class="w-full flex flex-wrap h-75-screen overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
     <div class="w-full flex flex-wrap content-start" id="video-container"></div>
 </div>
 <div class="w-full flex justify-center">
