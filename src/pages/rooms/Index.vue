@@ -175,9 +175,9 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex flex-wrap h-75-screen content-start overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
+<div class="w-full flex flex-wrap h-75-screen content-start bg-gray-300  overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
     <div 
-      class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300 border-r-2" 
+      class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0 border-r-2" 
       id="local-container"></div>
     <div class="md:w-3/4 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300" 
       id="video-container"></div>
