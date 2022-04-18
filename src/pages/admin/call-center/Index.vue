@@ -1,4 +1,5 @@
 <script>
+const Pusher = require("pusher-js");
 export default {
     name: "CallCenter",
 
@@ -9,7 +10,16 @@ export default {
         };
     },
 
-    mounted() {
+    created() {
+
+        var pusher = new Pusher("f51ef32768397112f453", {
+          cluster: "ap2",
+        });
+        let channel = pusher.subscribe("twilio-meet");
+        channel.bind('NewMeeting', (data) => {
+            console.log(`hello world`, data);
+            this.rooms.unshift(data);
+        })
         this.fetchCallCenterRooms();
     },
 

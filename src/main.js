@@ -3,7 +3,7 @@ import { router } from "./router";
 import App from './App.vue';
 import './assets/input.css';
 import http from './http';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const app = createApp(App);
 app.use(router);
