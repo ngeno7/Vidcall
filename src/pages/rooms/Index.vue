@@ -47,16 +47,17 @@ export default {
                     let localDiv = document.getElementById(room.localParticipant.identity);
                     if(!localDiv) {
                       localDiv = document.createElement('div');
-                      localDiv.classList.add('w-full');
-                      localDiv.classList.add('md:h-96');
+                      localDiv.classList.add('md:w-full');
+                      localDiv.classList.add('w-1/2');
+                      localDiv.classList.add('md:h-auto');
                       localDiv.classList.add('h-auto');
                       localDiv.classList.add('border-4');
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
                     localDiv.innerHTML = '';
                     const video = localVideoTrack.attach();
-                      video.style.transform = 'scale(-1, 1)';
-                      video.style.display = 'flex';
+                    video.style.transform = 'scale(-1, 1)';
+                    video.style.display = 'flex';
                     localDiv.appendChild(video);
                     document.getElementById('local-container').appendChild(localDiv);
 
@@ -90,7 +91,7 @@ export default {
 
                 room.participants.forEach(participant => {
                   console.log(participant);
-                  this.handleParticipantsConnected(participant);
+                  this.handleParticipantsConnected(participant, room);
                 });
 
                 console.log(`Successfully joined a Room: ${room}`);
@@ -112,7 +113,7 @@ export default {
             });
         },
 
-        handleParticipantsConnected(participant) {
+        handleParticipantsConnected(participant, room) {
           console.log(`A remote Participant connected: ${participant.identity}`);
           participant.tracks.forEach(publication => {
             console.log(publication.track);
@@ -121,12 +122,12 @@ export default {
                 let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('w-full');
-                remoteDiv.classList.add('md:w-1/2');
+                remoteDiv.classList.add('w-1/4');
+                remoteDiv.classList.add('md:w-1/3');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('border-4');
-                remoteDiv.classList.add('md:h-80');
-                remoteDiv.classList.add('h-80');
+                remoteDiv.classList.add('md:h-auto');
+                remoteDiv.classList.add('h-auto');
                 remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
@@ -140,16 +141,16 @@ export default {
             }
           });
           participant.on('trackSubscribed', track => {
-           console.log(track)
+           console.log(`participants`, `${100/room.participants.size}%`);
             if(track.kind == 'video') {
              let remoteDiv = document.getElementById(participant.identity)
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('w-full');
+                remoteDiv.style.width = `${100/room.participants.size}%`;
                 remoteDiv.classList.add('md:w-1/2');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('border-4');
-                remoteDiv.classList.add('md:h-60');
+                remoteDiv.classList.add('md:h-auto');
                 remoteDiv.classList.add('h-50');
                 remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
@@ -157,8 +158,8 @@ export default {
               remoteDiv.innerHTML = '';
               const video = track.attach();
               video.style.transform = 'scale(-1, 1)';
-              video.style.display = 'flex';
               video.style.height = '100%';
+              video.style.width = '100%';
               remoteDiv.appendChild(video);
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
@@ -174,11 +175,11 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex flex-wrap h-75-screen overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
+<div class="w-full flex flex-wrap h-75-screen content-start overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
     <div 
-      class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300 border-r-2" 
+      class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300 border-r-2" 
       id="local-container"></div>
-    <div class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300" 
+    <div class="md:w-3/4 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300" 
       id="video-container"></div>
 </div>
 <div class="w-full flex justify-center">
@@ -196,7 +197,7 @@ export default {
           id="mute-button"
           >
           <img class="h-10 w-10" 
-            :src="mute ? `/actions/mic.png` : `/actions/mute.png`" alt="">
+            :src="!mute ? `/actions/mic.png` : `/actions/mute.png`" alt="">
         </button>
     </div>
     <div class="flex-1 flex justify-center">
@@ -209,7 +210,7 @@ export default {
     </div>
     <div class="flex-1 flex justify-center">
         <a
-        href="/rate-call"
+        :href="`/rate-call?room=${$route.query.room}`"
         >
         <img class="h-10 w-10" src="/actions/cancel.png" alt="">
         </a>

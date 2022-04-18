@@ -61,8 +61,10 @@ export default {
           <select v-model.trim="meet.customer_issue"
             id="grid-enquiry-select" class="bg-white p-2 text-sm w-full rounded">
             <option value="">Select Issue</option>
-            <option value="Enquire One">Enquire One</option>
-            <option value="Enquire Two">Enquire Two</option>
+            <option value="General inquries">General inquries</option>
+            <option value="CFCS Budget Inquires">CFCS Budget Inquires</option>
+            <option value="CFCS Plan Approval">CFCS Plan Approval</option>
+            <option value="CFCS Plan Writing">CFCS Plan Writing</option>
           </select>
         </div>
         <div class="w-full p-2 mb-1">

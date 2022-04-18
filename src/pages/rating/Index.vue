@@ -3,6 +3,33 @@ import StarRating from 'vue-star-rating'
 export default {
     name: "Rating",
 
+    data() {
+
+      return {
+        loading: false,
+
+      };
+    },
+
+    mounted() {
+      this.completeCall();
+    },
+
+    methods: {
+
+        completeCall() {
+          this.loading = true;
+          this.$http.post(`rooms/${this.$route.query.room}/end-call`, { room: this.$route.query.room, } ).then(() => {
+            this.loading = false;
+          }).catch(() => { this.loading = false; });
+        },
+
+        saveRating() {
+
+          window.location.replace("https://communityfirstconsultationservices.com");
+        },
+    },
+
     components: {
         'star-rating': StarRating
     }
@@ -27,6 +54,14 @@ export default {
             :increment="1"
             text-class="w-full"
           />
+        </div>
+        <div class="w-full text-center mt-5 p-2">
+          <button
+            @click.prevent="saveRating"
+            class="bg-blue-500 font-medium text-white py-3 px-6 mx-auto"
+          >
+          Save Feedback
+          </button>
         </div>
     </div>
 </div>

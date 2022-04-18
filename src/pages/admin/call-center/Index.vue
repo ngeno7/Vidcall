@@ -1,5 +1,8 @@
 <script>
 const Pusher = require("pusher-js");
+import ActiveRooms from "./tabs/Active.vue";
+import CompletedCallRooms from "./tabs/CompletedCalls.vue";
+import Swal from 'sweetalert2';
 export default {
     name: "CallCenter",
 
@@ -7,7 +10,17 @@ export default {
 
         return {
             rooms: [],
+            completedRooms: [],
+            activeTab: 0
         };
+    },
+
+    watch: {
+
+        activeTab() {
+            this.fetchCallCenterRooms();
+            this.fetchCompletedCalls();
+        },
     },
 
     created() {
@@ -15,12 +28,32 @@ export default {
         var pusher = new Pusher("f51ef32768397112f453", {
           cluster: "ap2",
         });
+        
         let channel = pusher.subscribe("twilio-meet");
         channel.bind('NewMeeting', (data) => {
+            Swal.fire({
+                text: `New Client Call`,
+                icon: `info`,
+                toast: true,
+                position: 'top-end',
+                timerProgressBar: true,
+            });
+            document.getElementById('sound-notification').play();
             console.log(`hello world`, data);
             this.rooms.unshift(data);
-        })
+        });
+
+        let channel2 = pusher.subscribe("twilio-end-meet");
+        channel2.bind('EndMeeting', (data) => {
+            
+            let room = this.rooms.filter(rm => rm.id == data.id)[0];
+            console.log(`hello world end`, data);
+            this.rooms.splice(this.rooms.indexOf(room), 1);
+            this.completedRooms.unshift(data);
+        });
+
         this.fetchCallCenterRooms();
+        this.fetchCompletedCalls();
     },
 
     methods: {
@@ -38,41 +71,100 @@ export default {
                 this.rooms = data;
             }).catch(() => {});
         },
+
+        fetchCompletedCalls() {
+
+            this.$http.get(`completed-calls`).then(({ data }) => {
+                this.completedRooms = data;
+            }).catch(() => {});
+        },
     },
+    components: {
+        "active-rooms": ActiveRooms,
+        "completed-rooms": CompletedCallRooms
+    }
 }
 </script>
 <template>
 <div class="w-full my-4 p-2">
     <h5 class="text-gray-500 font-medium text-lg">Call Center</h5>
+    <audio id="sound-notification" src="/call.wav"></audio>
 </div>
-<div class="w-full overflow-auto h-table">
-    <table class="w-full border">
-        <thead class="bg-gray-300 text-sm text-left">
-            <tr>
-                <th class="p-1">Customer</th>
-                <th class="p-1">Enquiry</th>
-                <th class="p-1">Date</th>
-                <th class="p-1">Status</th>
-                <th class="p-1">Action</th>
-            </tr>
-        </thead>
-        <tbody class="bg-gray-100 text-xs">
-            <tr v-for="room in rooms" :key="room.id">
-                <td class="p-1">{{ room.client_name }}</td>
-                <td class="p-1">{{ room.customer_issue }}</td>
-                <td class="p-1">{{ room.call_time }}</td>
-                <td class="p-1">{{ room.status }}</td>
-                <td class="p-1">
-                    <button
-                        @click.prevent="joinRoom(room.slug)"
-                        class="bg-blue-500 font-medium text-white py-1 px-3">
-                        Join Client Call
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<ul class="
+  nav nav-tabs nav-justified
+  flex flex-col
+  md:flex-row
+  flex-wrap
+  list-none
+  border-b-0
+  pl-0
+  mb-4
+" id="tabs-tabJustify" role="tablist">
+  <li class="nav-item flex-grow text-center" role="presentation">
+    <a href="javascript:void(0)"
+    :class="activeTab==0 ? `bg-gray-300` : ``" 
+    @click.prevent="activeTab=0"
+    class="
+      bg-gray-100
+      nav-link
+      w-full
+      block
+      font-medium
+      text-xs
+      leading-tight
+      uppercase
+      border-x-0 border-t-0 border-b-2 border-transparent
+      px-6
+      py-3
+      my-2
+      hover:border-transparent hover:bg-gray-500
+      focus:border-transparent
+      active
+    " id="tabs-home-tabJustify" data-bs-toggle="pill" data-bs-target="#tabs-homeJustify" role="tab"
+      aria-controls="tabs-homeJustify" aria-selected="true">Active Calls</a>
+  </li>
+  <li class="nav-item flex-grow text-center" role="presentation">
+    <a href="javascript:void(0)" 
+    @click.prevent="activeTab=1"
+    :class="activeTab==1 ? `bg-gray-300` : ``"
+    class="
+      bg-gray-100
+      nav-link
+      w-full
+      block
+      font-medium
+      text-xs
+      leading-tight
+      uppercase
+      border-x-0 border-t-0 border-b-2 border-transparent
+      px-6
+      py-3
+      my-2
+      hover:border-transparent hover:bg-gray-500
+      focus:border-transparent
+    " id="tabs-profile-tabJustify" data-bs-toggle="pill" data-bs-target="#tabs-profileJustify" role="tab"
+      aria-controls="tabs-profileJustify" aria-selected="false">Completed Calls</a>
+  </li>
+</ul>
+<div class="tab-content" id="tabs-tabContentJustify">
+  <div class="tab-pane fade"
+    v-show="activeTab == 0"
+   id="tabs-homeJustify" role="tabpanel"
+    aria-labelledby="tabs-home-tabJustify">
+    <active-rooms
+        @joinRoom="joinRoom"
+        :rooms="rooms"
+     />
+  </div>
+  <div class="tab-pane fade" 
+    v-show="activeTab == 1"
+    id="tabs-profileJustify" role="tabpanel" aria-labelledby="tabs-profile-tabJustify">
+    <completed-rooms 
+        :rooms="completedRooms"
+    />
+  </div>
 </div>
+
 </template>
 <style scoped>
 .h-table {
