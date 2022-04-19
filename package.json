@@ -12,6 +12,7 @@
     "autoprefixer": "^9.8.8",
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
+    "js-cookie": "^3.0.1",
     "moment": "^2.29.2",
     "postcss": "^7.0.39",
     "pusher": "^5.0.1",

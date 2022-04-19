@@ -2,6 +2,7 @@ import Home from "../pages/Index.vue";
 import Room from "../pages/rooms/Index.vue";
 import Rating from "../pages/rating/Index.vue";
 import AdminLayout from "../pages/admin/Layout.vue"
+import LogIn from "../pages/auth/LogIn.vue";
 export const routes = [
     {
         path: '/',
@@ -17,6 +18,11 @@ export const routes = [
         path: '/rate-call',
         name: 'rate-call',
         component: Rating,
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: LogIn,
     },
     {
         path: '/admin',

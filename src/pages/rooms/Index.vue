@@ -41,7 +41,7 @@ export default {
             connect(token, {
                 name: this.$route.query.room,
                 video: true,
-                audio: true,
+                audio: { noiseSuppression: true, echoCancellation: true },
               }).then(room => {
                 createLocalVideoTrack().then(localVideoTrack => {
                     let localDiv = document.getElementById(room.localParticipant.identity);
@@ -49,6 +49,7 @@ export default {
                       localDiv = document.createElement('div');
                       localDiv.classList.add('md:w-full');
                       localDiv.classList.add('w-1/2');
+                      localDiv.classList.add('rounded-lg');
                       localDiv.classList.add('md:h-auto');
                       localDiv.classList.add('h-auto');
                       localDiv.classList.add('border-4');
@@ -122,9 +123,10 @@ export default {
                 let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('w-1/4');
-                remoteDiv.classList.add('md:w-1/3');
+                remoteDiv.style.width = room.participants.size > 1 ? `40%` : `70%`;
                 remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('m-1');
+                remoteDiv.classList.add('rounded-lg');
                 remoteDiv.classList.add('border-4');
                 remoteDiv.classList.add('md:h-auto');
                 remoteDiv.classList.add('h-auto');
@@ -146,9 +148,11 @@ export default {
              let remoteDiv = document.getElementById(participant.identity)
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.style.width = `${100/room.participants.size}%`;
-                remoteDiv.classList.add('md:w-1/2');
+                remoteDiv.style.width = room.participants.size > 1 ? `40%` : `70%`;
+                // remoteDiv.classList.add('md:w-1/2');
                 remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('m-1');
+                remoteDiv.classList.add('rounded-lg');
                 remoteDiv.classList.add('border-4');
                 remoteDiv.classList.add('md:h-auto');
                 remoteDiv.classList.add('h-50');
@@ -175,11 +179,11 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex flex-wrap h-75-screen content-start bg-gray-300  overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
+<div class="w-full flex flex-wrap h-75-screen content-start bg-gray-300 overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
     <div 
-      class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0 border-r-2" 
+      class="md:w-1/3 w-full flex flex-wrap content-start md:p-10 p-0 border-r-2" 
       id="local-container"></div>
-    <div class="md:w-3/4 w-full flex flex-wrap content-start md:p-10 p-0 bg-gray-300" 
+    <div class="md:w-2/3 w-full flex flex-wrap content-start md:p-10 p-0" 
       id="video-container"></div>
 </div>
 <div class="w-full flex justify-center">
