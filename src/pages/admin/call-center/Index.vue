@@ -32,7 +32,7 @@ export default {
         let channel = pusher.subscribe("twilio-meet");
         channel.bind('NewMeeting', (data) => {
             Swal.fire({
-                text: `New Client Call`,
+                text: `${data.client_name} has an enquiry -${data.customer_issue}`,
                 icon: `info`,
                 toast: true,
                 position: 'top-end',
@@ -77,6 +77,13 @@ export default {
             this.$http.get(`completed-calls`).then(({ data }) => {
                 this.completedRooms = data;
             }).catch(() => {});
+        },
+
+        deleteRoom(roomId) {
+
+            this.$http.delete(`rooms/${roomId}/delete`).then(() => {
+                this.fetchCallCenterRooms();
+            });
         },
     },
     components: {
@@ -153,6 +160,7 @@ export default {
     aria-labelledby="tabs-home-tabJustify">
     <active-rooms
         @joinRoom="joinRoom"
+        @deleteRoom="deleteRoom"
         :rooms="rooms"
      />
   </div>

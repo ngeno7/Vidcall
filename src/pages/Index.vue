@@ -9,6 +9,7 @@ export default {
             meet: {
               customer_issue: ``,
               client_name: ``,
+              comment: ``,
             },
         };
     },
@@ -38,8 +39,8 @@ export default {
     <div class="w-1/4 mx-auto mb-6">
       <router-link :to="{ name: `admin.home`, }">Admin Portal</router-link>
     </div>
-    <div class="w-1/4 mx-auto mb-6">
-      <img class="h-32" src="/cfcss.png" alt="">
+    <div class="w-1/4 mx-auto md:mb-6">
+      <img class="w-56" src="/cfcss.png" alt="">
     </div>
     <div class="w-1/2 my-4 text-center">
       <p class="text-gray-800 text-lg font-thin">
@@ -70,6 +71,13 @@ export default {
         <div class="w-full p-2 mb-1">
           <input type="text" v-model.trim="meet.customer_issue"
             id="grid-enquiry" class="bg-white p-2 text-sm w-full rounded">
+        </div>
+        <div class="w-full p-2 mb-1">
+          <label for="grid-enquiry-comment" 
+            class="text-gray-700 text-base font-medium mb-4">Comment</label>
+          <textarea v-model.trim="meet.comment"
+            class="bg-white p-2 text-sm w-full rounded" 
+              id="grid-enquiry-comment" rows="2"></textarea>
         </div>
         <div class="w-full text-center p-2">
           <button

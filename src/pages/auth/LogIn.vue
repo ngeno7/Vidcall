@@ -19,12 +19,13 @@ export default {
 
         logInUser() {
             if(this.loading) return;
+            Cookie.remove('TW___');
             this.error = ``;
             this.loading = true;
             this.$http.post(`login`, this.login).then(({ data }) => {
                 Cookie.set('TW___', data._token);
                 this.loading = false;
-                this.$router.push({name: `admin.home`})
+                window.location.replace("/admin");
             }).catch((error) => { 
                 console.log(error.response.data.message)
                 this.error = error.response.data.message;

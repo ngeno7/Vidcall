@@ -1,5 +1,6 @@
 <script>
 const { connect, createLocalVideoTrack  } = require('twilio-video');
+
 export default {
     name: "Home",
 
@@ -23,7 +24,6 @@ export default {
 
     mounted() {
         this.fetchAccessToken();
-        console.log(this.$route, window.location);
     },
 
     methods: {
@@ -36,6 +36,11 @@ export default {
             this.joinRoom(accessToken.data);
         },
 
+        setAgentJoined() {
+
+            this.$http.post(`set-agent-joined/${this.$route.query.room}`);
+        },
+
         joinRoom(token) {
 
             connect(token, {
@@ -43,6 +48,7 @@ export default {
                 video: true,
                 audio: { noiseSuppression: true, echoCancellation: true },
               }).then(room => {
+                this.setAgentJoined();
                 createLocalVideoTrack().then(localVideoTrack => {
                     let localDiv = document.getElementById(room.localParticipant.identity);
                     if(!localDiv) {
@@ -98,10 +104,10 @@ export default {
                 console.log(`Successfully joined a Room: ${room}`);
                 console.log(`The LocalParticipant identity is ${room.localParticipant}`);
                 room.on('participantConnected', participant => {
-                  this.handleParticipantsConnected(participant);
+                  this.handleParticipantsConnected(participant, room);
                 });
                 room.once('participantConnected', participant => {
-                  this.handleParticipantsConnected(participant);
+                  this.handleParticipantsConnected(participant, room);
                 });
                 room.once('participantDisconnected', participant => {
                   this.handleParticipantDisconnected(participant);
@@ -115,7 +121,6 @@ export default {
         },
 
         handleParticipantsConnected(participant, room) {
-          console.log(`A remote Participant connected: ${participant.identity}`);
           participant.tracks.forEach(publication => {
             console.log(publication.track);
             if (publication.track) {
@@ -142,13 +147,15 @@ export default {
               }
             }
           });
-          participant.on('trackSubscribed', track => {
-           console.log(`participants`, `${100/room.participants.size}%`);
+
+          participant.on('trackSubscribed', (track) => {
+  
             if(track.kind == 'video') {
              let remoteDiv = document.getElementById(participant.identity)
               if(!remoteDiv) {
+                console.log(`room`, room)
                 remoteDiv = document.createElement('div');
-                remoteDiv.style.width = room.participants.size > 1 ? `40%` : `70%`;
+                remoteDiv.style.width = room.participants && room.participants.size > 1 ? `40%` : `70%`;
                 // remoteDiv.classList.add('md:w-1/2');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('m-1');
@@ -173,18 +180,17 @@ export default {
         },
 
         handleParticipantDisconnected(participant) {
-          console.log(`Participant "${participant.identity}" has disconnected to the Room`);
+          if(!document.getElementById(participant.identity)) return;
+            document.getElementById(participant.identity).remove();
         },
     },
 }
 </script>
 <template>
 <div class="w-full flex flex-wrap h-75-screen content-start bg-gray-300 overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
-    <div 
-      class="md:w-1/3 w-full flex flex-wrap content-start md:p-10 p-0 border-r-2" 
-      id="local-container"></div>
-    <div class="md:w-2/3 w-full flex flex-wrap content-start md:p-10 p-0" 
-      id="video-container"></div>
+    <div class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0" id="local-container"></div>
+    <div class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0" id="video-container"></div>
+    <div class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0"></div>
 </div>
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-blue-500 p-2">
