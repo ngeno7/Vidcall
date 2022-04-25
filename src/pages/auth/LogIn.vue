@@ -26,8 +26,8 @@ export default {
                 Cookie.set('TW___', data._token);
                 this.loading = false;
                 window.location.replace("/admin");
-            }).catch((error) => { 
-                console.log(error.response.data.message)
+            }).catch((error) => {
+                this.loading = false;
                 this.error = error.response.data.message;
                 this.loading = false; 
             });

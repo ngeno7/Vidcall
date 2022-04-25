@@ -53,10 +53,8 @@ export default {
                     let localDiv = document.getElementById(room.localParticipant.identity);
                     if(!localDiv) {
                       localDiv = document.createElement('div');
-                      localDiv.classList.add('md:w-full');
-                      localDiv.classList.add('w-1/2');
+                      localDiv.classList.add('local-auto-width');
                       localDiv.classList.add('rounded-lg');
-                      localDiv.classList.add('md:h-auto');
                       localDiv.classList.add('h-auto');
                       localDiv.classList.add('border-4');
                       localDiv.setAttribute('id', room.localParticipant.identity);
@@ -64,7 +62,6 @@ export default {
                     localDiv.innerHTML = '';
                     const video = localVideoTrack.attach();
                     video.style.transform = 'scale(-1, 1)';
-                    video.style.display = 'flex';
                     localDiv.appendChild(video);
                     document.getElementById('local-container').appendChild(localDiv);
 
@@ -128,12 +125,11 @@ export default {
                 let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.style.width = room.participants.size > 1 ? `40%` : `70%`;
+                remoteDiv.classList.add('w-automatic');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('m-1');
                 remoteDiv.classList.add('rounded-lg');
                 remoteDiv.classList.add('border-4');
-                remoteDiv.classList.add('md:h-auto');
                 remoteDiv.classList.add('h-auto');
                 remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
@@ -155,14 +151,12 @@ export default {
               if(!remoteDiv) {
                 console.log(`room`, room)
                 remoteDiv = document.createElement('div');
-                remoteDiv.style.width = room.participants && room.participants.size > 1 ? `40%` : `70%`;
-                // remoteDiv.classList.add('md:w-1/2');
+                remoteDiv.classList.add('w-automatic');
                 remoteDiv.classList.add('flex');
                 remoteDiv.classList.add('m-1');
                 remoteDiv.classList.add('rounded-lg');
                 remoteDiv.classList.add('border-4');
                 remoteDiv.classList.add('md:h-auto');
-                remoteDiv.classList.add('h-50');
                 remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
@@ -187,10 +181,13 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex flex-wrap h-75-screen content-start bg-gray-300 overflow-auto md:px-32 px-3 pt-4" id="vid-stream">
-    <div class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0" id="local-container"></div>
+<div class="w-full flex md:flex-wrap flex-wrap-reverse h-75-screen content-start 
+  bg-gray-300 overflow-auto md:px-32 px-3" id="vid-stream">
+    <div 
+      class="md:w-1/2 w-full flex flex-wrap justify-end	md:justify-start 
+        md:border-r-2 md:border-white content-start md:p-10 p-0 xs:bottom-0 xs:right-0" 
+      id="local-container"></div>
     <div class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0" id="video-container"></div>
-    <div class="md:w-1/4 w-full flex flex-wrap content-start md:p-10 p-0"></div>
 </div>
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-blue-500 p-2">
@@ -228,13 +225,4 @@ export default {
    </div> 
 </div>
 </template>
-<style scoped>
-@media (min-width: 656px) {
-    .h-75-screen {
-        height: 80vh;
-    }
-}
-.h-75-screen {
-    height: 90vh;
-}
-</style>
+

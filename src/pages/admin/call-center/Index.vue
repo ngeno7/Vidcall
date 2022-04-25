@@ -52,6 +52,15 @@ export default {
             this.completedRooms.unshift(data);
         });
 
+        let channel3 = pusher.subscribe("twilio-activate-meet");
+        channel3.bind('ActiveMeeting', (data) => {
+            this.rooms.forEach(room => {
+                if(room.slug == data.slug) {
+                    room.status = `Active`;
+                }
+            });
+        });
+
         this.fetchCallCenterRooms();
         this.fetchCompletedCalls();
     },

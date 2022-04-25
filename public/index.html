@@ -6,6 +6,32 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+      @media screen and (min-width: 768px) {
+          .h-75-screen {
+              height: 80vh;
+          }
+          .w-automatic {
+            /* width: auto; */
+            max-width: 47%;
+          }
+          .local-auto-width {
+            width: 90%;
+          }
+      }
+      @media screen and (max-width: 768px) {
+          .h-75-screen {
+              height: auto;
+              min-height: 30rem;
+          }
+          .w-automatic {
+            width: 60%;
+          }
+          .local-auto-width {
+            width: 5rem;
+          }
+      }
+      </style>
   </head>
   <body>
     <noscript>
