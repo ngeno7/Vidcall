@@ -7,11 +7,11 @@ export default {
 
       return {
         loading: false,
-
+        rating: 0
       };
     },
 
-    mounted() {
+    created() {
       this.completeCall();
     },
 
@@ -19,14 +19,23 @@ export default {
 
         completeCall() {
           this.loading = true;
-          this.$http.post(`rooms/${this.$route.query.room}/end-call`, { room: this.$route.query.room, } ).then(() => {
+          this.$http.post(`rooms/${this.$route.query.room}/end-call`,
+             { room: this.$route.query.room, host: this.$route.query.host } ).then(() => {
             this.loading = false;
           }).catch(() => { this.loading = false; });
         },
 
         saveRating() {
-
-          window.location.replace("https://communityfirstconsultationservices.com");
+          this.loading = true;
+          this.$http.post(`rooms/rate-call`, {
+            room: this.$route.query.room,
+            rating: this.rating,
+          }).then(() => {
+            this.loading = false;
+            window.location.replace("https://communityfirstconsultationservices.com");
+          }).catch(() => {
+            this.loading = false;
+          });
         },
     },
 
@@ -49,6 +58,7 @@ export default {
       class="md:w-1/2 w-full flex flex-wrap shadow-md rounded-md bg-gray-200 mx-auto py-12 px-12">
         <div class="w-full text-center flex justify-center p-2">
           <star-rating 
+            v-model="rating"
             :rating="1"
             :max-rating="5"
             :increment="1"
@@ -60,7 +70,8 @@ export default {
             @click.prevent="saveRating"
             class="bg-blue-500 font-medium text-white py-3 px-6 mx-auto"
           >
-          Save Feedback
+          <span v-if="loading">Loading</span>
+          <span v-else>Save Feedback</span>
           </button>
         </div>
     </div>

@@ -27,7 +27,8 @@ export default {
                         room: data.data.room,
                         id: data.data.id,
                         enquiry: this.meet.enquiry,
-                      }
+                        host: 1,
+                      },
                     });
             }).catch(() => { this.loading = false; })
         },

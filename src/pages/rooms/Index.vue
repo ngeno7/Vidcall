@@ -92,7 +92,18 @@ export default {
                     
                   });
                 });
-
+                document.getElementById('disconnect-room').addEventListener('click', () => {
+                    if(!window.confirm(`Confirm Exit Room?`)) return;
+                    room.on('disconnected', room => {
+                          room.localParticipant.tracks.forEach(publication => {
+                            const attachedElements = publication.track.detach();
+                            attachedElements.forEach(element => element.remove());
+                          });
+                        });
+                        room.disconnect();
+                        let hostParam = this.$route.query.host ? `&host=1` : ``;
+                        window.location.replace(`/rate-call?room=${this.$route.query.room}${hostParam}`);
+                });
                 room.participants.forEach(participant => {
                   console.log(participant);
                   this.handleParticipantsConnected(participant, room);
@@ -174,8 +185,17 @@ export default {
         },
 
         handleParticipantDisconnected(participant) {
+          console.log(`disconnected`, participant);
           if(!document.getElementById(participant.identity)) return;
             document.getElementById(participant.identity).remove();
+        },
+
+        roomDisconnected(room) {
+          room.localParticipant.tracks.forEach(publication => {
+              const attachedElements = publication.track.detach();
+              attachedElements.forEach(element => element.remove());
+          });
+          room.disconnect();
         },
     },
 }
@@ -216,11 +236,9 @@ export default {
         </button>
     </div>
     <div class="flex-1 flex justify-center">
-        <a
-        :href="`/rate-call?room=${$route.query.room}`"
-        >
+        <button id="disconnect-room" >
         <img class="h-10 w-10" src="/actions/cancel.png" alt="">
-        </a>
+        </button>
     </div>
    </div> 
 </div>
