@@ -62,7 +62,7 @@ export default {
           <label for="grid-enquiry-select" 
             class="form-label">Enquiry:</label>
           <select v-model.trim="meet.customer_issue"
-            id="grid-enquiry-select" class="form-select form-select-sm">
+            id="grid-enquiry-select" class="form-control form-control-sm">
             <option value="">Select Issue</option>
             <option value="General inquries">General inquries</option>
             <option value="CFCS Budget Inquires">CFCS Budget Inquires</option>
