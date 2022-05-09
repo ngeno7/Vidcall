@@ -41,7 +41,7 @@ export default {
 
     components: {
         'star-rating': StarRating
-    }
+    },
 }
 </script>
 <template>

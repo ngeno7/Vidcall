@@ -27,8 +27,11 @@ export default {
                 this.loading = false;
                 window.location.replace("/admin");
             }).catch((error) => {
+                console.log('error', error.response)
                 this.loading = false;
-                this.error = error.response.data.message;
+                if(error.response.status == 400) {
+                  this.error = error.response.data.message;
+                }
                 this.loading = false; 
             });
         },

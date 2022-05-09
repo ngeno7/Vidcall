@@ -163,20 +163,17 @@ export default {
   </li>
 </ul>
 <div class="tab-content" id="tabs-tabContentJustify">
-  <div class="tab-pane fade"
-    v-show="activeTab == 0"
-   id="tabs-homeJustify" role="tabpanel"
-    aria-labelledby="tabs-home-tabJustify">
+  <div>
     <active-rooms
+        v-if="activeTab == 0"
         @joinRoom="joinRoom"
         @deleteRoom="deleteRoom"
         :rooms="rooms"
      />
   </div>
-  <div class="tab-pane fade" 
-    v-show="activeTab == 1"
-    id="tabs-profileJustify" role="tabpanel" aria-labelledby="tabs-profile-tabJustify">
+  <div>
     <completed-rooms 
+        v-if="activeTab == 1"
         :rooms="completedRooms"
     />
   </div>

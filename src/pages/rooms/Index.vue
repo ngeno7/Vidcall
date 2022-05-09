@@ -53,15 +53,16 @@ export default {
                     let localDiv = document.getElementById(room.localParticipant.identity);
                     if(!localDiv) {
                       localDiv = document.createElement('div');
-                      localDiv.classList.add('local-auto-width');
+                      localDiv.classList.add('embed-responsive');
+                      localDiv.classList.add('embed-responsive-16by9');
                       localDiv.classList.add('rounded-lg');
-                      localDiv.classList.add('h-auto');
-                      localDiv.classList.add('border-4');
+                      localDiv.classList.add('ratio-1x1');
                       localDiv.setAttribute('id', room.localParticipant.identity);
                     }
                     localDiv.innerHTML = '';
                     const video = localVideoTrack.attach();
                     video.style.transform = 'scale(-1, 1)';
+                    video.classList.add('embed-responsive-item');
                     localDiv.appendChild(video);
                     document.getElementById('local-container').appendChild(localDiv);
 
@@ -136,13 +137,14 @@ export default {
                 let remoteDiv = document.getElementById(participant.identity);
               if(!remoteDiv) {
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('w-automatic');
-                remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('embed-responsive');
+                remoteDiv.classList.add('embed-responsive-16by9');
+                remoteDiv.classList.add('col-lg-5');
+                remoteDiv.classList.add('col-md-5');
+                remoteDiv.classList.add('col-sm-12');
+                remoteDiv.classList.add('ratio-1x1');
                 remoteDiv.classList.add('m-1');
                 remoteDiv.classList.add('rounded-lg');
-                remoteDiv.classList.add('border-4');
-                remoteDiv.classList.add('h-auto');
-                remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
               remoteDiv.innerHTML = '';
@@ -162,13 +164,14 @@ export default {
               if(!remoteDiv) {
                 console.log(`room`, room)
                 remoteDiv = document.createElement('div');
-                remoteDiv.classList.add('w-automatic');
-                remoteDiv.classList.add('flex');
+                remoteDiv.classList.add('embed-responsive');
+                remoteDiv.classList.add('embed-responsive-16by9');
+                remoteDiv.classList.add('col-lg-5');
+                remoteDiv.classList.add('col-md-5');
+                remoteDiv.classList.add('col-sm-12');
                 remoteDiv.classList.add('m-1');
-                remoteDiv.classList.add('rounded-lg');
-                remoteDiv.classList.add('border-4');
+                remoteDiv.classList.add('ratio-1x1');
                 remoteDiv.classList.add('md:h-auto');
-                remoteDiv.classList.add('border-blue-500');
                 remoteDiv.setAttribute('id', participant.identity);
               }
               remoteDiv.innerHTML = '';
@@ -176,6 +179,7 @@ export default {
               video.style.transform = 'scale(-1, 1)';
               video.style.height = '100%';
               video.style.width = '100%';
+              video.classList.add('embed-responsive-item');
               remoteDiv.appendChild(video);
               document.getElementById('video-container').appendChild(remoteDiv);
             } else {
@@ -201,13 +205,13 @@ export default {
 }
 </script>
 <template>
-<div class="w-full flex md:flex-wrap flex-wrap-reverse h-75-screen content-start 
-  bg-gray-300 overflow-auto md:px-32 px-3" id="vid-stream">
-    <div 
-      class="md:w-1/2 w-full flex flex-wrap justify-end	md:justify-start 
-        md:border-r-2 md:border-white content-start md:p-10 p-0 xs:bottom-0 xs:right-0" 
-      id="local-container"></div>
-    <div class="md:w-1/2 w-full flex flex-wrap content-start md:p-10 p-0" id="video-container"></div>
+<div class="container bg-gray-300 overflow-auto md:px-32 px-3" id="vid-stream">
+  <div class="row" style="min-height:80vh; margin-top:5rem;">
+    <div class="col-md-6 col-sm-12" id="local-container"></div>
+    <div class="col-md-6 col-sm-12">
+      <div class="row" id="video-container"></div>
+    </div>
+  </div>
 </div>
 <div class="w-full flex justify-center">
    <div class="md:w-1/3 w-11/12 flex flex-row bg-blue-500 p-2">
@@ -243,4 +247,4 @@ export default {
    </div> 
 </div>
 </template>
-
+<style src="../../assets/boostrap.css"></style>

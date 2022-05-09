@@ -9,7 +9,7 @@ export default {
 </script>
 <template>
 <div class="w-full overflow-auto h-table">
-    <table class="w-full border">
+    <table class="w-full border table">
         <thead class="bg-gray-300 text-sm text-left">
             <tr>
                 <th class="p-1">Customer</th>

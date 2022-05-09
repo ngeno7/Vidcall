@@ -1,4 +1,5 @@
 <script>
+
 export default {
     name: "Home",
 
@@ -53,32 +54,21 @@ export default {
       class="md:w-1/2 w-full flex flex-wrap shadow-md rounded-md bg-gray-200 mx-auto py-12 px-12">
         <div class="w-full p-2 mb-1">
           <label for="grid-customer" 
-            class="text-gray-700 text-base font-medium mb-4">Name</label>
+            class="form-label">Name:</label>
           <input type="text" v-model.trim="meet.client_name" required
-            id="grid-customer" class="bg-white p-2 text-sm w-full rounded">
+            id="grid-customer" class="form-control form-control-sm">
         </div>
         <div class="w-full p-2 mb-1">
           <label for="grid-enquiry-select" 
-            class="text-gray-700 text-base font-medium mb-4">Enquiry</label>
+            class="form-label">Enquiry:</label>
           <select v-model.trim="meet.customer_issue"
-            id="grid-enquiry-select" class="bg-white p-2 text-sm w-full rounded">
+            id="grid-enquiry-select" class="form-select form-select-sm">
             <option value="">Select Issue</option>
             <option value="General inquries">General inquries</option>
             <option value="CFCS Budget Inquires">CFCS Budget Inquires</option>
             <option value="CFCS Plan Approval">CFCS Plan Approval</option>
             <option value="CFCS Plan Writing">CFCS Plan Writing</option>
           </select>
-        </div>
-        <div class="w-full p-2 mb-1">
-          <input type="text" v-model.trim="meet.customer_issue"
-            id="grid-enquiry" class="bg-white p-2 text-sm w-full rounded">
-        </div>
-        <div class="w-full p-2 mb-1">
-          <label for="grid-enquiry-comment" 
-            class="text-gray-700 text-base font-medium mb-4">Comment</label>
-          <textarea v-model.trim="meet.comment"
-            class="bg-white p-2 text-sm w-full rounded" 
-              id="grid-enquiry-comment" rows="2"></textarea>
         </div>
         <div class="w-full text-center p-2">
           <button
@@ -97,3 +87,4 @@ export default {
     </form>
   </div>
 </template>
+<style scoped src="@/assets/boostrap.css"></style>
