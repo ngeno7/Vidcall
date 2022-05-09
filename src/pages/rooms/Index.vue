@@ -206,7 +206,7 @@ export default {
 </script>
 <template>
 <div class="container bg-gray-300 overflow-auto md:px-32 px-3" id="vid-stream">
-  <div class="row" style="min-height:80vh; margin-top:5rem;">
+  <div class="row h-video-portal" style="margin-top:2rem;">
     <div class="col-md-6 col-sm-12" id="local-container"></div>
     <div class="col-md-6 col-sm-12">
       <div class="row" id="video-container"></div>
@@ -248,3 +248,25 @@ export default {
 </div>
 </template>
 <style src="../../assets/boostrap.css"></style>
+<style>
+@media (min-width: 1200px) {
+  .h-video-portal {
+    min-height: 80vh;
+  }
+}
+@media (min-width: 768px) {
+  .h-video-portal {
+    min-height: 80vh;
+  }
+}
+@media (max-width: 768px) {
+  .h-video-portal {
+    min-height: 0;
+  }
+}
+@media (max-width: 576px) {
+  .h-video-portal {
+    min-height: 0;
+  }
+}
+</style>
